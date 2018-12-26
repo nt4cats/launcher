@@ -148,6 +148,14 @@ public class Launcher
 		// Stream launcher version
 		extraJvmParams.add("-D" + PROPERTIES.getVersionKey() + "=" + PROPERTIES.getVersion());
 
+		// See if user added JVM params via an environment variable
+		List<String> envJvmParams = getJvmExtras(options);
+
+		if (envJvmParams != null)
+		{
+			extraJvmParams.addAll(envJvmParams);
+		}
+
 		// Set all JVM params
 		setJvmParams(extraJvmParams);
 
@@ -290,6 +298,26 @@ public class Launcher
 			clientArgs = (String) options.valueOf("clientargs");
 		}
 		return clientArgs;
+	}
+
+	private static List<String> getJvmExtras(OptionSet options)
+	{
+		String jvmArgs = System.getenv("RUNELITE_JVM_ARGS");
+		if (options.has("jvmargs"))
+		{
+			jvmArgs = (String) options.valueOf("jvmargs");
+		}
+
+		List<String> jvmExtrasList = null;
+
+		if (jvmArgs != null)
+		{
+			final String[] split = jvmArgs.split(",");
+
+			jvmExtrasList = Arrays.asList(split);
+		}
+
+		return jvmExtrasList;
 	}
 
 	private static void download(LauncherFrame frame, Bootstrap bootstrap) throws IOException
