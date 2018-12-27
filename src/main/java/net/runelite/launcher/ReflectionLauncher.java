@@ -47,7 +47,8 @@ class ReflectionLauncher
 			jarUrls[i++] = file.toURI().toURL();
 		}
 
-		URLClassLoader loader = new URLClassLoader(jarUrls, null);
+		ClassLoader parent = ClassLoader.getPlatformClassLoader();
+		URLClassLoader loader = new URLClassLoader(jarUrls, parent);
 
 		UIManager.put("ClassLoader", loader); // hack for Substance
 		Thread thread = new Thread()
